@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>TASK MANAGER</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="header-logo">TASK MANAGER</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <a href="/new_member" class="new-button">社員登録</a>
+        <h1>九州沖縄社員</h1>
+        <a href="/new_task_all/kyusyu" class="new-button">+ 共通タスク</a>
+      </div>
+      <div class="index-table-wrapper">
+        <div class="table-head">
+          <span class="id-column"></span>
+          <span>名前</span>
+        </div>
+        <ul class="table-body">
+          <% if (Array.isArray(kyusyu_members)) { %>
+            <% kyusyu_members.forEach((kyusyu_member) => { %>
+              <li>
+                <div class="item-data">
+                  <span class="id-column"></span>
+                  <span class="name-column"><%= kyusyu_member.name %></span>
+                </div>
+                <div class="item-menu">
+                  <form action="/delete_kyusyu_member/<%= kyusyu_member.id %>" method="post" onsubmit="return confirmDelete();">
+                    <input type="submit" value="削除">
+                  </form>
+                  <script>
+                    function confirmDelete() {
+                      return confirm("削除しますか？ この操作は元に戻せません。");
+                    }
+                  </script>
+                  
+                  <a href="/profile_kyusyu_member/<%= kyusyu_member.id %>">開く</a>
+                </div>
+              </li>
+            <% }) %>
+          <% } else { %>
+            <p>メンバーがいません。</p>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

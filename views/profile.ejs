@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>TASK MANAGER</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="header-logo">TASK MANAGER</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <h1><%= kyusyu_member.name %></h1>
+        <h1>やることリスト</h1>
+        <a href="/new_task/<%=kyusyu_member.id%>" class="new-button">+ 個人タスク</a>
+      </div>
+      <div class="index-table-wrapper">
+        <div class="table-head">
+          <span class="id-column"></span>
+          <span>タスク</span>
+        </div>
+        <ul class="table-body">
+          <% tasks.sort((a, b) => new Date(a.dl) - new Date(b.dl)); %>
+<% tasks.forEach((task) => { %>
+  <% if (task.member_id == kyusyu_member.id) { %> 
+  <li>
+    <div class="item-data">
+      <span class="id-column"></span>
+      <span class="name-column"><%= task.name %></span>
+      <span class="name-column">　　　期限：<%= new Date(task.dl).toLocaleDateString("ja-JP") %></span>
+    </div>
+    <div class="item-menu">
+      <a href="/about/<%= task.id %>">詳細</a>
+      <a href="/edit/<%= task.id %>">編集</a>
+      <form action="/delete_task/<%= task.id %>" method="post">
+        <input type="submit" value="完了">
+      </form>
+    </div>
+  </li>
+  <% } %>
+<% }) %>
+        </ul>
+      </div>
+      <a href="/kyusyu" class="cancel-button">もどる</a>
+    </div>
+  </body>
+</html>

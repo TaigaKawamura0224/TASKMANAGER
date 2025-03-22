@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>TASK MANAGER</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/send_url.js"></script>
+  </head>
+  <body>
+    <header>
+      <a href="/" class="header-logo">TASK MANAGER</a>
+    </header>
+    <div class="container">
+      <div class="container-header">
+        <h1><%= task.name %></h1>
+      </div>
+      <div class="item-form-wrapper">
+        <p class="form-label">説明</p>
+        <%= task.about %><br>
+        </br>
+        <p class="form-label">URL</p>
+        <a href="<%= task.url %>" target="_blank" rel="noopener noreferrer"><%= task.url %></a>
+      </div>
+      <a href="/profile_kyusyu_member/<%= task.member_id %>" class="cancel-button"></span>もどる</a>
+    </div>
+  </body>
+</html>
