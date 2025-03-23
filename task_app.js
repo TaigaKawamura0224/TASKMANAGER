@@ -4,7 +4,20 @@ const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
 const bodyParser = require("body-parser");
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
+
+const store = new MongoStore({
+  mongoUrl: process.env.MONGO_URL, // MongoDBの接続URLを環境変数から取得
+  collectionName: 'sessions', // セッションを保存するコレクション名
+});
+
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  store: store, // 修正したMongoStoreのインスタンスを使用
+  cookie: { secure: false } // HTTPSなら true にする
+}));
 const app = express();
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
