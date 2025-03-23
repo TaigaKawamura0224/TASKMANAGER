@@ -61,11 +61,16 @@ connection.query(
   }
 );
 
-cron.schedule('0 9 * * *', () => {
+const cron = require('node-cron');
+cron.schedule('0 9 * * *', async () => {
   console.log("⏰ リマインドメール送信開始（日本時間 9:00 AM）");
-  sendReminderEmails();
+  try {
+    await sendReminderEmails();
+    console.log("✅ リマインドメール送信完了");
+  } catch (error) {
+    console.error("❌ リマインドメール送信失敗:", error);
+  }
 }, {
-  scheduled: true,
   timezone: "Asia/Tokyo"
 });
 
