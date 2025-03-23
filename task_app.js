@@ -85,13 +85,23 @@ connection.connect((err) => {
   console.log("MySQLに接続しました");
 });
 
-app.use(
-  session({
-    secret: 'my_secret_key',
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+const MySQLStore = require('express-mysql-session')(session);
+const options = {
+  host: 'metro.proxy.rlwy.net',
+  uuser: 'root',
+  password: 'hcEhZXWlcIdLwuySwlIVXrokqCEsbEQU',
+  database: 'railway'
+};
+
+const sessionStore = new MySQLStore(options);
+
+app.use(session({
+  key: 'session_cookie_name',
+  secret: 'your_secret_key',
+  store: sessionStore,
+  resave: false,
+  saveUninitialized: false
+}));
 
 app.get('/', (req, res) => {
   res.render('top.ejs');
