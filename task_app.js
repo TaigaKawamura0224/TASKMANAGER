@@ -8,10 +8,11 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
 const connection=mysql.createConnection({
-  host: "taskmanager",
-  user: "root",
-  password: "19980224",
-  database: "task_app"
+  host: 'metro.proxy.rlwy.net',
+  port: 19075,
+  user: 'root',
+  password: 'hcEhZXWlcIdLwuySwlIVXrokqCEsbEQU',
+  database: 'railway'
 });
 
 const today = new Date();
