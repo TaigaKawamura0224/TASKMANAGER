@@ -8,7 +8,7 @@ const app = express();
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
 const connection=mysql.createConnection({
-  host: "127.0.0.1",
+  host: "Production MySQL",
   user: "root",
   password: "19980224",
   database: "task_app"
