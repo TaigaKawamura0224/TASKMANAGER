@@ -10,13 +10,15 @@
     "author": "Progate",
     "license": "ISC",
     "dependencies": {
+        "connect-mongo": "^5.1.0",
+        "connect-redis": "^8.0.2",
         "ejs": "^2.6.1",
         "express": "^4.16.4",
         "express-session": "^1.18.1",
+        "mysql2": "^3.14.0",
         "node-cron": "^3.0.3",
-        "nodemon": "^1.18.10",
-        "mysql2": "^3.6.0",
         "nodemailer": "^6.10.0",
-        "connect-mongo": "^4.4.0",
+        "nodemon": "^1.18.10",
+        "redis": "^4.7.0"
     }
 }
