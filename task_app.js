@@ -4,6 +4,14 @@ const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
 const bodyParser = require("body-parser");
 const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
+app.use(session({
+  secret: 'your_secret_key',
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  resave: false,
+  saveUninitialized: true
+}));
 const app = express();
 app.use(express.static("public"));
 app.use(express.urlencoded({extended: false}));
