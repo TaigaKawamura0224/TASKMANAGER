@@ -39,8 +39,8 @@ connection.query(
       const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-          user: 'taskmanager002@gmail.com',
-          pass: 'lzbc gjul cytu kqyx'
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
         }
       });
       results.forEach(task => {
