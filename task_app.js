@@ -1,4 +1,6 @@
 const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
 const PORT = process.env.PORT || 8080;
 const mysql = require('mysql2');
 const nodemailer = require('nodemailer');
@@ -6,6 +8,7 @@ const bodyParser = require("body-parser");
 const session = require('express-session');
 const app = express();
 app.use(express.static("public"));
+app.use(favicon(path.resolve(__dirname, 'public/favicon.ico')));
 app.use(express.urlencoded({extended: false}));
 const connection=mysql.createConnection({
   host: 'metro.proxy.rlwy.net',
