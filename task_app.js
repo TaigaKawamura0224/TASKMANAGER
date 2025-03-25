@@ -110,6 +110,15 @@ app.get('/', (req, res) => {
   res.render('top.ejs');
 });
 
+app.get('/summary', (req, res) => {
+  connection.query(
+    'SELECT * FROM tasks',
+    (error, results) => {
+      res.render('summary.ejs', {tasks: results});
+    }
+  );
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
