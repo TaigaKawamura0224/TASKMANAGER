@@ -11,11 +11,11 @@ app.use(express.static("public"));
 app.use(favicon(path.resolve(__dirname, 'public/favicon.ico')));
 app.use(express.urlencoded({extended: false}));
 const connection=mysql.createConnection({
-  host: 'metro.proxy.rlwy.net',
-  port: 19075,
-  user: 'root',
-  password: 'hcEhZXWlcIdLwuySwlIVXrokqCEsbEQU',
-  database: 'railway'
+  host: process.env.MYSQLHOST,
+  port:process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE
 });
 
 const today = new Date();
