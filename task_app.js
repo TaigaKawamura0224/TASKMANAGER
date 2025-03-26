@@ -18,56 +18,65 @@ const connection=mysql.createConnection({
   database: process.env.MYSQLDATABASE
 });
 
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-
-const reminderDays = 2;
-
-connection.query(
-  `SELECT tasks.id, tasks.name, tasks.dl, kyusyu_members.email
-   FROM tasks
-   JOIN kyusyu_members ON tasks.member_id = kyusyu_members.id
-   WHERE DATE(tasks.dl) = DATE_ADD(CONVERT_TZ(NOW(), '+00:00', '+09:00'), INTERVAL ? DAY)`,
-  [reminderDays],
-  (error, results) => {
-    if (error) {
-      console.error("Database query error:", error);
-      return;
-    }
-
-    if (Array.isArray(results) && results.length > 0) {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASS
-        }
-      });
-      results.forEach(task => {
-        const mailOptions = {
-          from: 'taskmanager002@gmail.com',
-          to: task.email,
-          subject: `【リマインド】タスクの期限が近づいています`,
-          text: `「${task.name}」の期限まであと2日です。お忘れなく！
-          ${task.url}`
-        };
-        transporter.sendMail(mailOptions, (err, info) => {
-          if (err) {
-            console.error(`❌ メール送信エラー (${task.email}):`, err);
-          } else {
-            console.log(`📩 メール送信成功 (${task.email}):`, info.response);
-          }
-        });
-      });
-    } else {
-      console.log("No tasks found for reminder.");
-    }
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
-);
+});
 
-const cron = require('node-cron');
+// 📆 リマインドメールを送る関数
+async function sendReminderEmails() {
+  console.log("sendReminderEmails 関数が実行されました");
+
+  // クエリやメール送信処理前にログを追加
+  console.log("データベースクエリを実行しています...");
+  
+  const reminderDays = 2; // 2日後のタスクを通知
+  connection.query(
+    `SELECT tasks.id, tasks.name, tasks.dl, kyusyu_members.email
+     FROM tasks
+     JOIN kyusyu_members ON tasks.member_id = kyusyu_members.id
+     WHERE DATE(tasks.dl) = DATE_ADD(CURDATE(), INTERVAL ? DAY)`,
+    [reminderDays],
+    (error, results) => {
+      if (error) {
+        console.error("❌ データベースエラー:", error);
+        return;
+      }
+
+      console.log("データベースの結果:", results);
+
+      if (Array.isArray(results) && results.length > 0) {
+        results.forEach(task => {
+          const mailOptions = {
+            from: '"タスク管理システム" <taskmanager002@gmail.com>',
+            to: task.email,
+            subject: `【リマインド】タスクの期限が近づいています`,
+            text: `「${task.name}」の期限まであと2日です。お忘れなく！`
+          };
+
+          transporter.sendMail(mailOptions, (err, info) => {
+            if (err) {
+              console.error(`❌ メール送信エラー (${task.email}):`, err);
+            } else {
+              console.log(`📩 メール送信成功 (${task.email}):`, info.response);
+            }
+          });
+        });
+      } else {
+        console.log("🔔 送信対象のタスクがありません");
+      }
+    }
+  );
+}
+
+// 関数を呼び出し
+sendReminderEmails();
+
 cron.schedule('0 9 * * *', async () => {
-  console.log("⏰ リマインドメール送信開始（日本時間 9:00 AM）");
+  console.log("⏰ リマインドメール送信処理が開始されました（日本時間 9:00 AM）");
   try {
     await sendReminderEmails();
     console.log("✅ リマインドメール送信完了");
@@ -77,8 +86,6 @@ cron.schedule('0 9 * * *', async () => {
 }, {
   timezone: "Asia/Tokyo"
 });
-
-console.log("📌 メールリマインダーが設定されました");
 
 connection.connect((err) => {
   if (err) {
